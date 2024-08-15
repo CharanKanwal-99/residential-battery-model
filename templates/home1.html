@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Residential Batteries</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: url('https://images.unsplash.com/photo-1601647062752-5cf008f6b257?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyNzAyMjd8MHwxfGFsbHwxfHx8fHx8fHwxNjgyMTkxNzg5&ixlib=rb-1.2.1&q=80&w=1920') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  h1 {
+    color: #333;
+    margin: 50px 0;
+    font-size: 3rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 40px; /* Add spacing below the buttons */
+  }
+  .button {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 8px;
+    background-color: #00aaff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  .button img {
+    margin-right: 10px;
+    height: 24px;
+    width: auto;
+  }
+  .button:hover {
+    background-color: #0088cc;
+    transform: translateY(-2px);
+  }
+  .button:active {
+    background-color: #0077b3;
+    transform: translateY(0);
+  }
+  .plot-container {
+    margin-top: 40px; /* Add spacing above the image */
+  }
+  .plot-container img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+</head>
+<body>
+  <h1>Residential Batteries</h1>
+  <div class="button-container">
+    <form id="gridForm" action="/grid" method="GET">
+      <button type="submit" class="button">
+        Get Grid Impact
+      </button>
+    </form>
+    <form id="savingsForm" action="/savings" method="GET">
+      <button type="submit" class="button">
+        Get Monetary Savings
+      </button>
+    </form>
+  </div>
+
+  <div class="plot-container">
+    <img src="{{ url_for('static', filename='images/electric_grid.png') }}" alt="Battery Plot Plot">
+  </div>
+</body>
+</html>

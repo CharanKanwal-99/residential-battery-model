@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Savings Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 0;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select, input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        fieldset {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        legend {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center;">Battery Savings Calculator</h2>
+    <form action="/prediction" method="post" enctype="multipart/form-data">
+        <label for="address">Enter Address:</label><br>
+        <input type="text" id="address" name="address" required><br><br>
+
+        <label for="iou">IOU:</label><br>
+        <select id="iou" name="iou" required>
+            <option value="">Select...</option>
+            <option value="PG&E">PG&E</option>
+            <option value="SDG&E">SDG&E</option>
+            <option value="SCE">SCE</option>
+        </select><br><br>
+
+        <fieldset>
+            <legend>Interconnection Date:</legend>
+            <label><input type="radio" name="interconnection_date" value="before_april_2023" required> Before April 2023</label><br>
+            <label><input type="radio" name="interconnection_date" value="after_april_2023"> After April 2023</label><br>
+        </fieldset><br>
+
+        <label for="tariff_plan">Tariff Plan:</label><br>
+        <select id="tariff_plan" name="tariff_plan" required>
+            <option value="">Select...</option>
+        </select><br><br>
+        
+        <label for="low_income_housing">Low Income Housing:</label><br>
+        <select id="low_income_housing" name="low_income_housing" required>
+            <option value="">Select...</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select><br><br>
+
+        <label for="battery_type">Battery Type:</label><br>
+        <select id="battery_type" name="battery_type" required>
+            <option value="">Select...</option>
+            <option value="Tesla Powerwall-13.5kwh">Tesla Powerwall -13.5kWh</option>
+            <option value="Ecoflow DPU + Smart Home Panel-6kwh">Ecoflow DPU + Smart Home Panel - 6kWh</option>
+            <option value="Anker Solix X1-3kwh">Anker Solix X1 - 3kWh</option>
+            <option value="Generac PWRcell-9kwh">Generac PWRcell - 9kWh</option>
+            <option value="Enphase IQ Battery 10T-10kwh">Enphase IQ Battery 10T - 10kWh</option>
+        </select><br><br>
+
+
+        <label for="solar_pairing">Solar Pairing:</label><br>
+        <select id="solar_pairing" name="solar_pairing" required onchange="toggleSolarParameters()">
+            <option value="">Select...</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select><br><br>
+
+        <div id="solar_parameters" style="display: none;">
+            <label for="array_type">Array Type:</label><br>
+            <input type="number" id="array_type" name="array_type" value="0" readonly><br><br>
+
+            <label for="azimuth">Azimuth (degrees):</label><br>
+            <input type="number" id="azimuth" name="azimuth" value="180" readonly><br><br>
+
+            <label for="tilt">Tilt (degrees):</label><br>
+            <input type="number" id="tilt" name="tilt" value="0" readonly><br><br>
+
+            <label for="system_capacity">System Capacity (kW):</label><br>
+            <input type="number" id="system_capacity" name="system_capacity" value="1" readonly><br><br>
+
+            <label for="dc_ac_ratio">DC/AC Ratio:</label><br>
+            <input type="number" id="dc_ac_ratio" name="dc_ac_ratio" value="1.4" readonly><br><br>
+
+            <label for="module_type">Module Type:</label><br>
+            <input type="number" id="module_type" name="module_type" value="0" readonly><br><br>
+        </div>
+
+        <label for="load_profile">Load Profile:</label><br>
+        <select id="load_profile" name="load_profile" required onchange="toggleLoadProfileOptions()">
+            <option value="">Select...</option>
+            <option value="upload">Upload Own File</option>
+            <option value="generate">Generate Using Location and Building Data</option>
+        </select><br><br>
+
+        <div id="upload_file" style="display: none;">
+            <label for="csv_file">Upload CSV File:</label><br>
+            <input type="file" id="csv_file" name="csv_file" accept=".csv"><br><br>
+        </div>
+
+        <div id="location_climate_fields" style="display: none;">
+            <label for="location">Location:</label><br>
+            <select id="location" name="location">
+                <option value="">Select...</option>
+                <option value="Alturas">Alturas</option>
+                <option value="Arcata">Arcata</option>
+                <option value="Bakersfield">Bakersfield</option>
+                <option value="Barstow">Barstow</option>
+                <option value="Beale">Beale</option>
+                <option value="Bishop">Bishop</option>
+                <option value="Blue Canyon">Blue Canyon</option>
+                <option value="Blythe-Riverside">Blythe-Riverside</option>
+                <option value="Burbank-Glendale-Passadena">Burbank-Glendale-Passadena</option>
+                <option value="Camarillo">Camarillo</option>
+                <option value="Camp Pendleton">Camp Pendleton</option>
+                <option value="Carlsbad">Carlsbad</option>
+                <option value="China Lake">China Lake</option>
+                <option value="Chino">Chino</option>
+                <option value="Chula Vista-Brown">Chula Vista-Brown</option>
+                <option value="Concord-Buchanan">Concord-Buchanan</option>
+                <option value="Crescent City">Crescent City</option>
+                <option value="Edwards AFB">Edwards AFB</option>
+                <option value="El Toro">El Toro</option>
+                <option value="Fairfield">Fairfield</option>
+                <option value="Fresno">Fresno</option>
+                <option value="Fullerton">Fullerton</option>
+                <option value="Hawthorne-Jack Northrop">Hawthorne-Jack Northrop</option>
+                <option value="Hayward Air Terminal">Hayward Air Terminal</option>
+                <option value="Imperial County">Imperial County</option>
+                <option value="Lancaster">Lancaster</option>
+                <option value="Lemoore">Lemoore</option>
+                <option value="Livermore">Livermore</option>
+                <option value="Lompoc">Lompoc</option>
+                <option value="Long Beach">Long Beach</option>
+                <option value="Los Angeles">Los Angeles</option>
+                <option value="March AFB">March AFB</option>
+                <option value="Merced-Macready Field">Merced-Macready Field</option>
+                <option value="Modesto Muni">Modesto Muni</option>
+                <option value="Montague-Siskiyou County">Montague-Siskiyou County</option>
+                <option value="Monterey">Monterey</option>
+                <option value="Mount Shasta">Mount Shasta</option>
+                <option value="Mountain View">Mountain View</option>
+                <option value="Napa County">Napa County</option>
+                <option value="Needles">Needles</option>
+                <option value="Oakland">Oakland</option>
+                <option value="Oxnard">Oxnard</option>
+                <option value="Palm Springs">Palm Springs</option>
+                <option value="Palmdale">Palmdale</option>
+                <option value="Paso Robles">Paso Robles</option>
+                <option value="Point Mugu">Point Mugu</option>
+                <option value="Porterville">Porterville</option>
+                <option value="Red Bluff">Red Bluff</option>
+                <option value="Redding">Redding</option>
+                <option value="Riverside">Riverside</option>
+                <option value="Sacramento">Sacramento</option>
+                <option value="Salinas Muni">Salinas Muni</option>
+                <option value="San Diego">San Diego</option>
+                <option value="San Francisco">San Francisco</option>
+                <option value="San Jose">San Jose</option>
+                <option value="San Luis Obispo">San Luis Obispo</option>
+                <option value="Sandberg">Sandberg</option>
+                <option value="Santa Ana">Santa Ana</option>
+                <option value="Santa Barbara">Santa Barbara</option>
+                <option value="Santa Maria">Santa Maria</option>
+                <option value="Santa Monica">Santa Monica</option>
+                <option value="Santa Rosa">Santa Rosa</option>
+                <option value="Lake Tahoe">Lake Tahoe</option>
+                <option value="Stockton">Stockton</option>
+                <option value="Truckee">Truckee</option>
+                <option value="Twentynine">Twentynine</option>
+                <option value="Ukiah Muni">Ukiah Muni</option>
+                <option value="Van Nuys">Van Nuys</option>
+                <option value="Visalia Muni">Visalia Muni</option>
+                <option value="Yuba County">Yuba County</option>
+            </select><br><br>
+
+            <label for="climate_zone"> IECC Climate Zone:</label><br>
+            <select id="climate_zone" name="climate_zone">
+                <option value="">Select...</option>
+                <option value="3B">Zone 3B</option>
+                <option value="3C">Zone 3C</option>
+                <option value="4B">Zone 4B</option>
+            </select><br><br>
+        </div>
+
+        <input type="submit" value="Submit">
+    </form>
+    
+    <script>
+        function toggleSolarParameters() {
+            var solarPairing = document.getElementById('solar_pairing').value;
+            var solarParamsDiv = document.getElementById('solar_parameters');
+            
+            if (solarPairing === 'yes') {
+                solarParamsDiv.style.display = 'block';
+                enableSolarParameterInputs(true); // Enable inputs for user modifications
+            } else {
+                solarParamsDiv.style.display = 'none';
+                enableSolarParameterInputs(false); // Disable inputs if not shown
+            }
+        }
+
+        function enableSolarParameterInputs(enable) {
+            var inputs = document.querySelectorAll('#solar_parameters input');
+            inputs.forEach(function(input) {
+                input.readOnly = !enable;
+            });
+        }
+
+        function toggleLoadProfileOptions() {
+            var loadProfile = document.getElementById('load_profile').value;
+            var uploadFileDiv = document.getElementById('upload_file');
+            var locationClimateDiv = document.getElementById('location_climate_fields');
+            var locationSelect = document.getElementById('location');
+            var climateZoneSelect = document.getElementById('climate_zone');
+            
+            if (loadProfile === 'upload') {
+                uploadFileDiv.style.display = 'block';
+                locationClimateDiv.style.display = 'none';
+                locationSelect.required = false;
+                climateZoneSelect.required = false;
+            } else if (loadProfile === 'generate') {
+                uploadFileDiv.style.display = 'none';
+                locationClimateDiv.style.display = 'block';
+                locationSelect.required = true;
+                climate}
+            }
+
+            function updateTariffPlanOptions() {
+        var iou = document.getElementById('iou').value;
+        var interconnectionDate = document.querySelector('input[name="interconnection_date"]:checked').value;
+        var tariffPlanSelect = document.getElementById('tariff_plan');
+
+        // Clear current options
+        tariffPlanSelect.innerHTML = '<option value="">Select...</option>';
+        
+        if (iou === 'PG&E') {
+            if (interconnectionDate === 'before_april_2023') {
+                tariffPlanSelect.innerHTML += '<option value="E-TOU-C (Peak 4-9pm)">E-TOU-C (Peak 4-9pm)</option>';
+                tariffPlanSelect.innerHTML += '<option value="E-TOU-D (Peak 5-8pm)">E-TOU-D (Peak 5-8pm)</option>';
+            } else if (interconnectionDate === 'after_april_2023') {
+                tariffPlanSelect.innerHTML += '<option value="E-ELEC">E-ELEC</option>';
+            }
+        } else if (iou === 'SCE') {
+            if (interconnectionDate === 'before_april_2023') {
+                tariffPlanSelect.innerHTML += '<option value="TOU-D (Peak 4-9pm)">TOU-D (Peak 4-9pm)</option>';
+                tariffPlanSelect.innerHTML += '<option value="TOU-D (Peak 5-8pm)">TOU-D (Peak 5-8pm)</option>';
+            } else if (interconnectionDate === 'after_april_2023') {
+                tariffPlanSelect.innerHTML += '<option value="TOU-D-Prime">TOU-D-Prime</option>';
+            }
+        } else if (iou === 'SDG&E') {
+                tariffPlanSelect.innerHTML += '<option value="EV TOU">EV TOU</option>';
+            }
+
+    }
+
+
+    // Attach event listeners to IOU and interconnection date fields
+    document.getElementById('iou').addEventListener('change', updateTariffPlanOptions);
+    document.querySelectorAll('input[name="interconnection_date"]').forEach(function(radio) {
+        radio.addEventListener('change', updateTariffPlanOptions);
+    });
+    </script>
+</body>
+</html>

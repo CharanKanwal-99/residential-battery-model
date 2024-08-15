@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grid Impact</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    text-align: center;
+    margin: 20px;
+    padding: 0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  h1 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  .result {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+  }
+  .button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 20px;
+    display: inline-block;
+  }
+  .button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  tr:nth-child(odd) {
+    background-color: #fff;
+  }
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+  .batteries-info {
+    font-weight: bold;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Grid Impact</h1>
+    <div id="gridImpactResult" class="result">
+      Based on the system load file and fleet of batteries, your system peak load will get reduced by the following amount:
+    </div>
+    <!-- Line showing number of batteries -->
+    <div class="batteries-info">
+      No of Batteries: {{ batteries }}
+    </div>
+    <!-- Placeholder for the table -->
+    <div id="dataTable">
+      {{ table_html | safe }}
+    </div>
+    <!-- New Buttons for navigation -->
+    <button class="button" onclick="navigateTo('/monthly')">See Monthly Level Grid Impact</button>
+    <button class="button" onclick="navigateTo('/battery')">See Battery Level Grid Impact</button>
+  </div>
+
+  <script>
+    function navigateTo(url) {
+      window.location.href = url;
+    }
+  </script>
+</body>
+</html>

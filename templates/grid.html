@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grid Impact Analysis</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    text-align: center;
+    margin: 20px;
+    padding: 0;
+  }
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  .form-group input[type="file"],
+  .form-group input[type="number"],
+  .form-group input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 10px;
+  }
+  .btn:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="color: #4CAF50;">Grid Impact Analysis</h1>
+    <form id="gridForm" action="/prediction1" method="POST">
+      <div class="form-group">
+        <label for="loadProfile">Upload System Load File:</label>
+        <input type="file" id="loadProfile" name="loadProfile" accept=".csv">
+      </div>
+      <div class="form-group">
+        <label for="numBatteries">Number of Batteries:</label>
+        <input type="number" id="numBatteries" name="numBatteries" min="1000" step="1000" value="1000">
+      </div>
+      <div class="form-group">
+        <button type="button" class="btn" onclick="toggleBatteryParameters()">See Batteries Composition</button>
+      </div>
+      <div class="form-group" id="battery_list" style="display: none;">
+        <label for="battery_1">Tesla Powerwall 3 - 13.5 kwh / 11.5 kw:</label><br>
+        <input type="number" id="battery_1" name="battery_1" value="12.5" readonly><br><br>
+                
+        <label for="battery_2">Ecoflow DPU + Smart Home Panel 2 - 6 kwh / 7.2 kw:</label><br>
+        <input type="number" id="battery_2" name="battery_2" value="25" readonly><br><br>
+
+        <label for="battery_3">Anker Solix X1 - 3 kwh / 5 kw:</label><br>
+        <input type="number" id="battery_3" name="battery_3" value="25" readonly><br><br>
+
+        <label for="battery_4">Generac PWRcell - 9 kwh / 4.5 kw:</label><br>
+        <input type="number" id="battery_4" name="battery_4" value="25" readonly><br><br>
+
+        <label for="battery_5">Enphase IQ 10T - 10 kwh / 3.8 kw:</label><br>
+        <input type="number" id="battery_5" name="battery_5" value="12.5" readonly><br><br>
+      </div>
+      <div class="form-group">
+        <label for="county">County:</label>
+        <input type="text" id="county" name="county" placeholder="Enter your county">
+      </div>
+      <input type="submit" value="Get Grid Impact" class="btn">
+    </form>
+  </div>
+
+  <script>
+    function toggleBatteryParameters() {
+      var batteryListDiv = document.getElementById('battery_list');
+      if (batteryListDiv.style.display === 'none') {
+        batteryListDiv.style.display = 'block';
+        enableBatteryParameterInputs(true);
+      } else {
+        batteryListDiv.style.display = 'none';
+        enableBatteryParameterInputs(false);
+      }
+    }
+
+    function enableBatteryParameterInputs(enable) {
+      var inputs = document.querySelectorAll('#battery_list input');
+      inputs.forEach(function(input) {
+        input.readOnly = !enable;
+      });
+    }
+  </script>
+
+</body>
+</html>

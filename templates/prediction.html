@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Savings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 18px; /* Increase default font size */
+        }
+        h2 {
+            color: #007BFF;
+            font-size: 32px; /* Larger font size for h2 */
+            font-weight: bold; /* Bold text */
+            text-transform: uppercase; /* Capitalize text */
+            margin: 0; /* Remove default margin */
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px; /* Increase font size in container */
+            font-weight: bold; /* Bold text in container */
+        }
+        p {
+            font-size: 18px; /* Larger font size for paragraphs */
+            line-height: 1.5;
+            font-weight: bold; /* Bold text */
+        }
+        .highlight {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 20px; /* Increase font size of highlighted text */
+        }
+        .annual-bill {
+            margin-top: 20px;
+            font-size: 20px; /* Increase font size */
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #e7f1ff;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold; /* Bold text */
+        }
+        .additional-info {
+            margin-top: 20px;
+            font-size: 18px; /* Increase font size */
+            text-align: center;
+            font-weight: bold; /* Bold text */
+        }
+        .bill-info {
+            font-weight: bold;
+            color: #007BFF;
+            font-size: 20px; /* Increase font size */
+        }
+        .plot-container h3 {
+            font-size: 28px; /* Larger font size for h3 */
+            font-weight: bold; /* Bold text */
+            text-transform: uppercase; /* Capitalize text */
+            margin: 0; /* Remove default margin */
+        }
+    </style>
+</head>
+<body>
+    <h2>Battery Savings</h2>
+
+    <div class="container">
+        <p>Buying the battery you selected will bring savings of around <span class="highlight">${{ savings }}</span>/year and your investment will become profitable in <span class="highlight">{{ years }}</span> years.</p>
+    </div>
+
+    <!-- Additional lines -->
+    <div class="billing-information">
+        <p>Your annual bill with battery plus solar: <span class="bill-info">${{ battery_bill }}</span></p>
+        <p>Your annual bill with just Solar: <span class="bill-info">${{ solar_bill }}</span></p>
+    </div>
+
+    <!-- Include the plot -->
+    <div class="plot-container" style="text-align: center;">
+        <h3>Comparison of Battery Types</h3>
+        <img src="{{ url_for('static', filename='images/break_even_plot.png') }}" alt="Battery Plot">
+    </div>
+
+
+    <div class="plot-container" style="text-align: center;">
+        <h3>Daily Profiles</h3>
+        <img src="{{ url_for('static', filename='images/daily_profile_plot_sample.png') }}" alt="Profile Plot">
+    </div>
+
+</body>
+</html>
